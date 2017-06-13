@@ -1,0 +1,53 @@
+
+<nav class="navbar navbar-toggleable-md navbar-inverse bg-inverse fixed-top">
+    <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+    <span class="navbar-toggler-icon"></span>
+  </button>
+  <a class="navbar-brand" href="#">{{title}}</a>
+  <ul class="nav navbar-nav mr-auto">
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+    <li class="nav-item ">
+      <a class="nav-link" routerLinkActive="active" [routerLink]="['home']">Inicio <span class="sr-only">(current)</span></a>
+    </li>
+    <li class="nav-item ">
+      <a class="nav-link" routerLinkActive="active" [routerLink]="['picas']">Picas</a>
+    </li>
+    <li class="nav-item ">
+      <a class="nav-link"  routerLinkActive="active" [routerLink]="['pagos']">Pagos</a>
+    </li>
+    </div>
+  </ul>
+  
+  <ul class="nav navbar-nav">
+    <li *ngIf="!isLogged()" class="nav-item">
+      <a class="nav-link" (click)="open()" ><i class="fa fa-user" aria-hidden="true"></i></a>
+    </li>
+    <li *ngIf="isLogged()" class="nav-item">
+      <a class="nav-link" (click)="logout()"><i class="fa fa-sign-out" aria-hidden="true"></i></a>
+    </li>
+   <!-- <li class="nav-item">
+      <a class="nav-link" href="https://github.com/beeman"><i class="fa fa-github" aria-hidden="true"></i></a>
+    </li>-->
+  </ul>
+
+</nav>
+<spinner-component [spinnerShow]="progress"></spinner-component>
+<modal [animation]="animation" [keyboard]="keyboard" [backdrop]="backdrop" (onClose)="closed()" (onDismiss)="dismissed()"
+        (onOpen)="opened()" [cssClass]="cssClass" #validationModal>
+        <form #modalForm="ngForm">
+            <modal-header [show-close]="true">
+                <h4 class="modal-title">Ingresar</h4>
+            </modal-header>
+            <modal-body>
+                <div class="form-group">
+                    <label for="id">Usuario</label>
+                    <input autofocus pattern="^([VEJPGvejpg]{1})([0-9]{7,9})$" title="Ejemplo: V12345678" type="text" style="text-transform: uppercase;" class="form-control" required [(ngModel)]="usuario.cedula" name="id" id="id">
+                </div>
+            </modal-body>
+            <modal-footer>
+                <button type="button" class="btn btn-default" data-dismiss="modal" (click)="validationModal.dismiss()">Cancel</button>
+                <button type="button" class="btn btn-primary" [disabled]="!modalForm.valid" (click)="validationModal.close()">Entrar</button>
+            </modal-footer>
+        </form>
+        
+</modal>

@@ -1,0 +1,8 @@
+<footer class="footer">
+  <div class="container"> 
+  <span class="text-muted"> {{title}} </span>
+    <span *ngIf="getUserName()" class="text-muted">
+     | {{ getUserName() }} - {{ getUserId() }} - {{ getRole() }}
+    </span>
+  </div>
+</footer>

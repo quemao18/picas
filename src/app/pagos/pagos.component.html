@@ -1,0 +1,100 @@
+
+  <div class="jumbotron ">
+    <h1>{{title}}</h1>
+    <p class="lead">Reportes de pagos realizados, estado, usuarios que han pagado, etc...</p>
+    <p class="lead">
+    <button type="button" class="btn btn-primary " (click)="open()">Reportar pago</button>
+  </p>
+  </div>
+
+<table class="table table-striped table-sm">
+  <spinner-component [spinnerShow]="progress"></spinner-component>
+  <thead>
+    <tr>
+      <!-- <th>#</th> -->
+      <th style="width: 30%">Piloto</th>
+      <th style="width: 30%">Referencia</th>
+      <th style="width: 15%">Monto</th>
+      <th style="width: 15%">Estado</th>
+      <th style="width: 15%" *ngIf="isAdmin()">Cambiar</th>
+      <th style="width: 10%">Fecha</th>
+    </tr>
+    
+  </thead>
+  <tbody>
+    <tr *ngFor="let pago of pagosVal | paginate: { itemsPerPage: 10, currentPage: page }">
+      <!--<th scope="row">{{pica.id_pica}}</th>-->
+      <td>{{pago.nombre}}</td>
+      <td>{{pago.referencia}}</td>
+      <td>Bs. {{pago.monto | number : '1.2-2'}}</td>
+      <td [ngClass]="{'text-success': pago.estado === 'Verificado', 'text-danger': pago.estado === 'No verificado'}">{{pago.estado}}</td>
+      <td align="center" *ngIf="isAdmin() && pago.estado!='Verificado'"><button class="btn-success btn-sm" (click)="cambiarEstado(pago.id_pago,'Verificado')"><i class="fa fa-check" aria-hidden="true"></i></button></td>      
+      <td align="center" *ngIf="isAdmin() && pago.estado!='No verificado'"><button class="btn-danger btn-sm" (click)="cambiarEstado(pago.id_pago,'No verificado')"><i class="fa fa-remove" aria-hidden="true"></i></button></td>      
+      <td>{{pago.fecha_creacion | date:'dd/MM/yy'}}</td>
+    </tr>
+
+  </tbody>
+
+</table>
+
+            <div align="center" class="has-text-centered">
+                <pagination-controls (pageChange)="page = $event"></pagination-controls>
+            </div>
+            <div align="cneter">
+                <strong>Total aportes: {{pagosVal.length}}</strong>
+                <strong *ngIf="isAdmin()"> | Dinero disponible Bs: {{totalVal | number : '1.2-2'}}</strong>
+            </div>
+
+<modal [animation]="animation" [keyboard]="keyboard" [backdrop]="backdrop" (onDismiss)="dismissed()"
+        (onOpen)="opened()" [cssClass]="cssClass" #validationModal>
+
+        <form #modalForm="ngForm">
+            <modal-header [show-close]="true">
+    
+                <h4 class="modal-title">Reportar pago</h4>
+            </modal-header>
+                <modal-body>
+                   
+                <div class="form-group">
+                    <label for="id">Cédula</label>
+                    <input pattern="^([VEJPGvejpg]{1})([0-9]{6,9})$" title="Ejemplo: V12345678" style="text-transform: uppercase;" autofocus (change)="buscar($event)" type="text" class="form-control" required [(ngModel)]="usuario.id_usuario" name="id" id="id">
+                </div>
+                <div>
+                <div class="form-group">
+                    <label for="nombre">Nombre</label>
+                    <input type="text" class="form-control" required [(ngModel)]="usuario.nombre" name="nombre" id="nombre">
+                </div>
+                <div class="form-group">
+                    <label for="email">email</label>
+                    <input [focus]="inputFocused" type="email" type="text" class="form-control" required [(ngModel)]="usuario.email" name="email" id="email">
+                </div>
+                <div class="form-group">
+                    <label for="telefono">Teléfono</label>
+                    <input type="text" class="form-control" required [(ngModel)]="usuario.telefono" name="telefono" id="telefono">
+                </div>
+                </div>
+                <div class="form-group">
+                    <label for="monto">Monto del aporte (Bs.)</label>
+                    <input type="text" class="form-control" required [(ngModel)]="pago.monto" name="monto" id="monto">
+                </div>
+                <div class="form-group">
+                    <label for="referencia"># de referencia</label>
+                    <input type="text" class="form-control" required [(ngModel)]="pago.referencia" name="referencia" id="referencia">
+                </div>
+                <div class="form-group">
+                    <label for="banco">Depositado a:</label>
+                    <select name="usuariosBanco" id="usuariosBanco" [(ngModel)]="pago.id_usuario_banco" required class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+                        <option  *ngFor="let usuarioBanco of usuariosBanco " [ngValue]="usuarioBanco.id_usuario">{{usuarioBanco.nombre}} - {{usuarioBanco.banco}}</option>
+                    </select>
+                    
+                </div>
+                <div class="alert-danger"> {{error}}  </div>
+                </modal-body>
+            <modal-footer>
+               
+                <button type="button" class="btn btn-default" data-dismiss="modal" (click)="validationModal.dismiss()">Cancel</button>
+                <button type="button" class="btn btn-primary" [disabled]="!modalForm.valid || !pago.id_usuario_banco" (click)="registrar()">Registrar</button>
+            </modal-footer>
+        </form>
+          <spinner-component [spinnerShow]="progress"></spinner-component>
+</modal>

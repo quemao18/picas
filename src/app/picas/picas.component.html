@@ -1,0 +1,120 @@
+
+  <div class="jumbotron">
+    <h1>{{title}}</h1>
+    <p class="lead">Información y picas disponibles.</p>
+    <p class="lead">
+    <button type="button" class="btn btn-primary " (click)="open()">Crear pica</button>
+    </p>
+  </div>
+
+<table class="table table-striped table-sm ">
+  <spinner-component [spinnerShow]="progress"></spinner-component>
+  <thead>
+    <tr>
+      <!-- <th>#</th> -->
+      <th>Nombre</th>
+      <th>Estado</th>
+      <th>Dificultad</th>
+      <th *ngIf="isAdmin()">Editar</th>
+    </tr>
+    <tr></tr>
+  </thead>
+  <tbody>
+    <tr *ngFor="let pica of picasVal | paginate: { itemsPerPage: 10, currentPage: page }">
+      <!--<th scope="row">{{pica.id_pica}}</th>-->
+      <td>{{pica.nombre}}</td>
+      <td>{{pica.estado}}</td>
+      <td>{{pica.dificultad}}</td>
+      <td *ngIf="isAdmin()"><a class="nav-link" (click)="editarOpen(pica)"><i class="fa fa-edit" aria-hidden="true"></i></a></td>
+    </tr>
+  </tbody>
+</table>
+
+<div align="center" class="has-text-centered">
+    <pagination-controls (pageChange)="page = $event"></pagination-controls>
+</div>
+
+<div align="cneter">
+    <strong>Total picas: {{picasVal.length}}</strong>
+</div>
+
+
+
+<modal [animation]="animation" [keyboard]="keyboard" [backdrop]="backdrop" 
+         [cssClass]="cssClass" #validationModal>
+
+        <form #modalForm="ngForm">
+            <modal-header [show-close]="true">
+              <h4 class="modal-title">Crear pica</h4>
+            </modal-header>
+                <modal-body>
+                   
+                <div class="form-group">
+                    <label for="id">Nombre</label>
+                    <input style="text-transform: uppercase;" autofocus type="text" class="form-control" required [(ngModel)]="pica.nombre" name="nombre" id="nombre">
+                </div>
+               
+               <div class="form-group">
+                    <label for="dificultad">Dificultad:</label>
+                    <select name="dificultad" id="dificultad" [(ngModel)]="pica.dificultad" required class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+                        <option *ngFor="let dificultad of dificultadesVal " [ngValue]="dificultad">{{dificultad}}</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select name="estado" id="estado" [(ngModel)]="pica.estado" required class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+                        <option *ngFor="let estado of estadosVal " [ngValue]="estado">{{estado}}</option>
+                    </select>
+                  </div>
+                <div class="alert-danger"> {{error}}  </div>
+                </modal-body>
+            <modal-footer>
+               
+                <button type="button" class="btn btn-default" data-dismiss="modal" (click)="validationModal.dismiss()">Cancel</button>
+                <button type="button" class="btn btn-primary" [disabled]="!modalForm.valid " (click)="crear()">Crear</button>
+            </modal-footer>
+        </form>
+          <spinner-component [spinnerShow]="progress"></spinner-component>
+</modal>
+
+
+<modal [animation]="animation" [keyboard]="keyboard" [backdrop]="backdrop" 
+         [cssClass]="cssClass" #editModal>
+
+        <form #modalFormEdit="ngForm">
+            <modal-header [show-close]="true">
+              <h4 class="modal-title">Crear pica</h4>
+            </modal-header>
+                <modal-body>
+                   
+                <div class="form-group">
+                    <label for="id">Nombre</label>
+                    <input style="text-transform: uppercase;" autofocus type="text" class="form-control" required [(ngModel)]="picaEdit.nombre" name="nombre" id="nombre">
+                </div>
+               
+                  <div class="form-group">
+                    <label for="estado">Estado:</label>
+                    <select name="estado" id="estado" [(ngModel)]="picaEdit.estado" required class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+                        <option [selected]="pica.estado == estado" *ngFor="let estado of estadosVal " [ngValue]="estado">{{estado}}</option>
+                    </select>
+                  </div>
+
+                  <div class="form-group">
+                    <label for="dificultad">Dificultad:</label>
+                    <select name="dificultad" id="dificultad" [(ngModel)]="picaEdit.dificultad" required class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+                        <option [selected]="pica.dificultad == dificultad" *ngFor="let dificultad of dificultadesVal " [ngValue]="dificultad">{{dificultad}}</option>
+                    </select>
+                  </div>
+
+
+                <div class="alert-danger"> {{error}}  </div>
+                </modal-body>
+            <modal-footer>
+               
+                <button type="button" class="btn btn-default" data-dismiss="modal" (click)="editModal.dismiss()">Cancel</button>
+                <button type="button" class="btn btn-primary" [disabled]="!modalFormEdit.valid " (click)="guardar(picaEdit)">Guardar</button>
+            </modal-footer>
+        </form>
+          <spinner-component [spinnerShow]="progress"></spinner-component>
+</modal>
