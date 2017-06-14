@@ -42,7 +42,7 @@
             </div>
             <div align="cneter">
                 <strong>Total aportes: {{pagosVal.length}}</strong>
-                <strong *ngIf="isAdmin()"> | Dinero disponible Bs: {{totalVal | number : '1.2-2'}}</strong>
+                <strong *ngIf="isAdmin()"> | Disponible Bs: {{totalVal | number : '1.2-2'}}</strong>
             </div>
 
 <modal [animation]="animation" [keyboard]="keyboard" [backdrop]="backdrop" (onDismiss)="dismissed()"
@@ -55,15 +55,17 @@
             </modal-header>
                 <modal-body>
                    
-                <div class="form-group">
+                <div class="form-group row">
+                <div class="col-4">
                     <label for="id">Cédula</label>
                     <input pattern="^([VEJPGvejpg]{1})([0-9]{6,9})$" title="Ejemplo: V12345678" style="text-transform: uppercase;" autofocus (change)="buscar($event)" type="text" class="form-control" required [(ngModel)]="usuario.id_usuario" name="id" id="id">
                 </div>
-                <div>
-                <div class="form-group">
+                <div class="col-8">
                     <label for="nombre">Nombre</label>
                     <input type="text" class="form-control" required [(ngModel)]="usuario.nombre" name="nombre" id="nombre">
                 </div>
+                </div>
+              
                 <div class="form-group">
                     <label for="email">email</label>
                     <input [focus]="inputFocused" type="email" type="text" class="form-control" required [(ngModel)]="usuario.email" name="email" id="email">
@@ -71,24 +73,34 @@
                 <div class="form-group">
                     <label for="telefono">Teléfono</label>
                     <input type="text" class="form-control" required [(ngModel)]="usuario.telefono" name="telefono" id="telefono">
-                </div>
-                </div>
-                <div class="form-group">
-                    <label for="monto">Monto del aporte (Bs.)</label>
+                </div>                
+                <div class="form-group row">
+                <div class="col">
+                    <label for="monto">Monto (Bs.)</label>
                     <input type="text" class="form-control" required [(ngModel)]="pago.monto" name="monto" id="monto">
                 </div>
-                <div class="form-group">
+                <div class="col">
                     <label for="referencia"># de referencia</label>
                     <input type="text" class="form-control" required [(ngModel)]="pago.referencia" name="referencia" id="referencia">
                 </div>
+                <div class="col">
+                    <label for="fecha">Fecha del pago</label>
+                    <input class="form-control" type="date" value="2011-08-19" id="example-date-input" required [(ngModel)]="pago.fecha_deposito" name="fecha_deposito" id="fecha_deposito">
+                </div>
+                </div>
                 <div class="form-group">
                     <label for="banco">Depositado a:</label>
-                    <select name="usuariosBanco" id="usuariosBanco" [(ngModel)]="pago.id_usuario_banco" required class="custom-select mb-2 mr-sm-2 mb-sm-0" id="inlineFormCustomSelect">
+                    <select name="usuariosBanco" id="usuariosBanco" [(ngModel)]="pago.id_usuario_banco" required class="form-control" id="inlineFormCustomSelect">
                         <option  *ngFor="let usuarioBanco of usuariosBanco " [ngValue]="usuarioBanco.id_usuario">{{usuarioBanco.nombre}} - {{usuarioBanco.banco}}</option>
                     </select>
                     
                 </div>
-                <div class="alert-danger"> {{error}}  </div>
+                <div *ngIf="error!=''" class="alert alert-danger alert-dismissible fade show" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                 {{error}}  
+                </div>
                 </modal-body>
             <modal-footer>
                

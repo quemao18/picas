@@ -52,7 +52,7 @@ export class PagosComponent implements OnInit {
   usuario = { id_usuario:'', nombre:'', telefono:'', email:'' };
   usuariosBanco = [{ id_usuario:'', nombre: '', banco:'' }];
   userNameBanco = '';
-  pago = { monto:'', id_usuario_banco:'', referencia: ''};
+  pago = { monto:'', id_usuario_banco:'', referencia: '', fecha_deposito:''};
   @ViewChild('validationModal')
   modal: ModalComponent;
   items: string[] = ['item1', 'item2', 'item3'];
@@ -137,6 +137,7 @@ export class PagosComponent implements OnInit {
   registrar() {
        // this.output = '(closed) ' + this.selected;
        //console.log(this.pago);
+      this.error = '';
       this.progress = true;
        (this.usuarioService.registrar(this.usuario, this.pago).subscribe(
  (          response) => this.onSuccessSave(response), 
@@ -175,6 +176,7 @@ export class PagosComponent implements OnInit {
 
     open() {
         //this.nav.open();
+        this.error = '';
         this.bancos();
         this.modal.open();
     }
